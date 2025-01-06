@@ -7,6 +7,7 @@ def cli():
 
 cli.add_command(new)
 cli.add_command(read)
+cli.add_command(load)
 
 if __name__ == "__main__":
     cli()
