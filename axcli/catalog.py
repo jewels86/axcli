@@ -18,10 +18,10 @@ def catalog(url):
     content = r_catalog.text
     i = 0
     for line in content.splitlines():
+        print(f"\033[KFetching {Fore.GREEN}{line}{Style.RESET_ALL}...", end="\r")
         r = httpx.get(url.replace("catalog.txt", line))
         systems[i] = json.loads(r.text)
         i += 1
-
     print(f"Fetched {Fore.GREEN}{len(systems)}{Style.RESET_ALL} systems from {Fore.LIGHTBLUE_EX}{url}{Style.RESET_ALL}.")
 
     for j in range(0, PAGE_LEN):
@@ -68,14 +68,11 @@ def catalog(url):
                 if download.lower() == 'y':
                     r1 = httpx.get(url.replace("catalog.txt", system['path']))
                     r2 = httpx.get(url.replace("catalog.txt", system['path'].replace("tmpl", "meta")))
-                    meta = json.loads(r2.text)
-                    file = json.loads(r1.text)
-                    complete = axtools.combine(meta, file)
-                    with open(system['path'], "wb") as f:
+                    complete = axtools.combine(r2.text, r1.text)
+                    with open(system['path'], "w") as f:
                         json.dump(complete, f, indent=4)
                     print(f"{Fore.GREEN}Downloaded {system['path']}{Style.RESET_ALL}!")
                     
-                    print(f"Fetched {Fore.GREEN}{len(systems)}{Style.RESET_ALL} systems from {Fore.LIGHTBLUE_EX}{url}{Style.RESET_ALL}.")
                     for j in range(0, PAGE_LEN):
                         try:
                             print(f"{Fore.BLUE}{j}{Style.RESET_ALL}: {Fore.MAGENTA}{systems[j]['name']}{Style.RESET_ALL} by {Fore.RED}{systems[j]['author']}{Style.RESET_ALL}")
