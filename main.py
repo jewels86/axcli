@@ -8,6 +8,7 @@ def cli():
 cli.add_command(new)
 cli.add_command(read)
 cli.add_command(load)
+cli.add_command(catalog)
 
 if __name__ == "__main__":
     cli()
