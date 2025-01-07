@@ -14,6 +14,7 @@ def catalog(url):
     print(f"Welcome to the {Fore.RED}Axinite Template Catalog{Style.RESET_ALL}!")
 
     systems = {}
+    meta_paths = {}
     r_catalog = httpx.get(url)
     content = r_catalog.text
     i = 0
@@ -21,6 +22,7 @@ def catalog(url):
         print(f"\033[KFetching {Fore.GREEN}{line}{Style.RESET_ALL}...", end="\r")
         r = httpx.get(url.replace("catalog.txt", line))
         systems[i] = json.loads(r.text)
+        meta_paths[i] = line
         i += 1
     print(f"Fetched {Fore.GREEN}{len(systems)}{Style.RESET_ALL} systems from {Fore.LIGHTBLUE_EX}{url}{Style.RESET_ALL}.")
 
@@ -67,10 +69,10 @@ def catalog(url):
                 download = click.prompt(f"{system['name']}", type=str)
                 if download.lower() == 'y':
                     r1 = httpx.get(url.replace("catalog.txt", system['path']))
-                    r2 = httpx.get(url.replace("catalog.txt", system['path'].replace("tmpl", "meta")))
+                    r2 = httpx.get(url.replace("catalog.txt", meta_paths[int(answer)]))
                     complete = axtools.combine(r2.text, r1.text)
                     with open(system['path'], "w") as f:
-                        json.dump(complete, f, indent=4)
+                        f.write(complete)
                     print(f"{Fore.GREEN}Downloaded {system['path']}{Style.RESET_ALL}!")
                     
                     for j in range(0, PAGE_LEN):

@@ -14,6 +14,6 @@ def read(path):
         click.echo(f"Framerate: {system['rate'] or 'Unknown'}")
         click.echo("Bodies:")
         for body in system['bodies']:
-            position = f"({body['r']['x']}, {body['r']['y']}, {body['r']['z']})"
-            velocity = f"({body['v']['x']}, {body['v']['y']}, {body['v']['z']})"
-            click.echo(f"  {body['name']} - {body['mass']} kg {position} to {velocity}")
+            position = f"({body['r']['x']}, {body['r']['y']}, {body['r']['z']}) m"
+            velocity = f"({body['v']['x']}, {body['v']['y']}, {body['v']['z']}) m/s"
+            click.echo(f"  {body['name']} - {body['mass']} kg {position} at {velocity}")
