@@ -1,3 +1,4 @@
 axinite
 click
 colorama
+textual
