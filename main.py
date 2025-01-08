@@ -9,7 +9,7 @@ cli.add_command(new)
 cli.add_command(read)
 cli.add_command(load)
 cli.add_command(catalog)
-cli.add_command(run)
+#cli.add_command(run)
 cli.add_command(show)
 
 if __name__ == "__main__":
