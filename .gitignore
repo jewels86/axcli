@@ -172,3 +172,5 @@ cython_debug/
 .pypirc
 
 *.ax
+*.tmpl.ax
+*.meta.ax
