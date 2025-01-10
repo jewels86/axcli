@@ -1,3 +1,0 @@
-axinite
-click
-colorama
