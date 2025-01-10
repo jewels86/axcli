@@ -5,6 +5,7 @@ import click
 @click.argument("path", type=click.Path(exists=True))
 @click.option("-f", "--frontend", type=str, default="vpython")
 def live(path, frontend):
+    "Watch a system live."
     name_to_frontend = {
         "vpython": axtools.vpython_frontend,
     }

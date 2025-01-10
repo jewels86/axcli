@@ -7,6 +7,7 @@ import click
 @click.option("-b", "--backend", type=str, default="verlet")
 @click.option("-f", "--frontend", type=str, default="vpython")
 def run(path, backend, frontend):
+    "Watch and load a system simultaneously."
     name_to_backend = {
         "verlet": ax.verlet_backend,
         "euler": ax.euler_backend,

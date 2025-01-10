@@ -4,6 +4,7 @@ import json
 @click.command("read")
 @click.argument("path", type=click.Path(exists=True))
 def read(path):
+    "Read a system from a file."
     with open(path, "r") as file:
         system = json.load(file)
         

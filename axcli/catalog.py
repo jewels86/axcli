@@ -10,6 +10,7 @@ PAGE_LEN = 10
 @click.command("catalog")
 @click.option("-u", "--url", type=str, help="The URL of the catalog file", default=CATALOG)
 def catalog(url):
+    "Shows a catalog where you can download templates."
     lines = 0
     print(f"Welcome to the {Fore.RED}Axinite Template Catalog{Style.RESET_ALL}!")
 

@@ -7,6 +7,7 @@ import json
 
 @click.command("new")
 def new():
+    "Creates a new system."
     name = click.prompt("Enter the name of the system", type=str)
     author = click.prompt("Enter the author of the system", type=str)
     limit = click.prompt("Enter the time limit of the system in an interpretable form (-1 for infinite)", type=str)
