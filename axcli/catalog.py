@@ -21,7 +21,8 @@ def catalog(url):
     i = 0
     for line in content.splitlines():
         print(f"\033[KFetching {Fore.GREEN}{line}{Style.RESET_ALL}...", end="\r")
-        r = httpx.get(url.replace("catalog.txt", line))
+        if line.startswith("http") or line.startswith("https"): r = httpx.get(line)
+        else: r = httpx.get(url.replace("catalog.txt", line))
         systems[i] = json.loads(r.text)
         meta_paths[i] = line
         i += 1
