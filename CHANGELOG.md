@@ -4,6 +4,7 @@
 - Major increments represent a rework or a revamp of the module.
 - Minor increments represent new functionality or API changes.
 - Patch increments represent bug fixes or other changes that don't directly affect users.
-
-## 1.0.3 - 9/1/2025
+## 1.1.0 - 1/11/2025
+- Added the `run` command
+## 1.0.3 - 1/9/2025
 - Added `http` option for catalog items
