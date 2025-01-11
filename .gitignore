@@ -174,3 +174,4 @@ cython_debug/
 *.ax
 *.tmpl.ax
 *.meta.ax
+test.py
