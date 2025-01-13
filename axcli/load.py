@@ -7,5 +7,5 @@ import axinite.tools as axtools
 def load(input_path, output_path=""):
     "Load a system from a file."
     args = axtools.read(input_path)
-    if output_path != "": axtools.load(args, output_path)
-    else: axtools.load(args, f"{args.name}.ax")
+    if output_path != "": axtools.load(args, output_path, verbose=True)
+    else: axtools.load(args, f"{args.name}.ax", verbose=True)
