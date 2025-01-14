@@ -17,7 +17,7 @@ python -m axcli
 
 You can read [the docs](https://jewels86.gitbook.io/axinite/axcli) for more!
 
-## Roadmap
+## Development Progress
 - [x] Complete CLI and commands
 - [ ] Complete the docs
 - [ ] Custom backends with `importlib`
