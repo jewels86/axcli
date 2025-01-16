@@ -22,4 +22,4 @@ You can read [the docs](https://jewels86.gitbook.io/axinite/axcli) for more!
 - [ ] Complete the docs
 - [ ] Custom backends with `importlib`
 - [ ] Custom frontends with `importlib`
-- [ ] Add a catalog to `jewels86.me```
+- [ ] Add a catalog to `jewels86.me`
