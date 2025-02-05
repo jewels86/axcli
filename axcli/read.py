@@ -1,5 +1,4 @@
-import click
-import json
+import click, json
 
 @click.command("read")
 @click.argument("path", type=click.Path(exists=True))

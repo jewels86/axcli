@@ -5,7 +5,6 @@ from axcli import *
 def cli():
     pass
 
-cli.add_command(new)
 cli.add_command(read)
 cli.add_command(load)
 cli.add_command(catalog)
