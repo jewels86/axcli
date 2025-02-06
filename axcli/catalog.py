@@ -7,6 +7,7 @@ import axinite.tools as axtools
 CATALOG = "https://raw.githubusercontent.com/jewels86/Axinite/refs/heads/main/templates/catalog.txt"
 PAGE_LEN = 10
 
+
 @click.command("catalog")
 @click.option("-u", "--url", type=str, help="The URL of the catalog file", default=CATALOG)
 def catalog(url):
@@ -28,13 +29,16 @@ def catalog(url):
         i += 1
     print(f"Fetched {Fore.GREEN}{len(systems)}{Style.RESET_ALL} systems from {Fore.LIGHTBLUE_EX}{url}{Style.RESET_ALL}.")
 
-    for j in range(0, PAGE_LEN):
-        try:
-            print(f"{Fore.BLUE}{j}{Style.RESET_ALL}: {Fore.MAGENTA}{systems[j]['name']}{Style.RESET_ALL} by {Fore.RED}{systems[j]['author']}{Style.RESET_ALL}")
-            lines += 1
-        except KeyError:
-            break
-    print(f"[0-{PAGE_LEN - 1}] View a system, [n]ext page, [r]eprint, [q]uit")
+    def print_systems():
+        for j in range(0, PAGE_LEN):
+            try:
+                print(f"{Fore.BLUE}{j}{Style.RESET_ALL}: {Fore.MAGENTA}{systems[j]['name']}{Style.RESET_ALL} by {Fore.RED}{systems[j]['author']}{Style.RESET_ALL}")
+                lines += 1
+            except KeyError:
+                break
+        print(f"[0-{PAGE_LEN - 1}] View a system, [n]ext page, [r]eprint, [q]uit")
+
+    print_systems()
     lines += 1
     answer = click.prompt("", type=str)
 
@@ -43,13 +47,7 @@ def catalog(url):
             if lines - 1 >= len(systems):
                 click.echo("No more systems to display.")
             else:
-                for j in range(lines - 1, lines + PAGE_LEN - 1):
-                    try:
-                        print(f"{Fore.BLUE}{j}{Style.RESET_ALL}: {Fore.MAGENTA}{systems[j]['name']}{Style.RESET_ALL} by {Fore.RED}{systems[j]['author']}{Style.RESET_ALL}")
-                        lines += 1
-                    except KeyError:
-                        break
-                print(f"[0-{lines - 1}] View a system, [n]ext page, [p]revious, [r]eprint, [q]uit")
+                print_systems()
                 lines += 1
         if answer.lower() == "r":
             for j in range(0, PAGE_LEN):
