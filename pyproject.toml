@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "axcli"
-version = "1.1.4"
+version = "1.1.5"
 dependencies = ["axinite", "click", "colorama"]
 authors = [{ name = "Jewels", email = "jewels@jewels86.me" }]
 maintainers = [{ name = "Jewels", email = "jewels286@proton.me" }]
@@ -14,7 +14,7 @@ license = { file = "LICENSE.md" }
 keywords = ["celestial-mechanics", "orbital-dynamics", "engine", "astrodynamics", "cli"]
 
 [project.scripts]
-axcli = "axcli.cli:main"
+axcli = "axcli.cli:cli"
 
 [project.urls]
 Documentation = "https://jewels86.gitbook.io/axinite/axcli"
