@@ -1,87 +1,109 @@
-import click
-import httpx
-import json
+import click, httpx, asyncio, json, queue
 from colorama import Fore, Style
 import axinite.tools as axtools
 
 CATALOG = "https://raw.githubusercontent.com/jewels86/Axinite/refs/heads/main/templates/catalog.txt"
 PAGE_LEN = 10
 
-
 @click.command("catalog")
-@click.option("-u", "--url", type=str, help="The URL of the catalog file", default=CATALOG)
+@click.option("-u", "--url", type=str, help="The URL of the catalog file.", default=CATALOG)
 def catalog(url):
     "Shows a catalog where you can download templates."
-    lines = 0
     print(f"Welcome to the {Fore.RED}Axinite Template Catalog{Style.RESET_ALL}!")
+    systems = []
+    system_queue = queue.Queue()
 
-    systems = {}
-    meta_paths = {}
-    r_catalog = httpx.get(url)
-    content = r_catalog.text
-    i = 0
-    for line in content.splitlines():
-        print(f"\033[KFetching {Fore.GREEN}{line}{Style.RESET_ALL}...", end="\r")
-        if line.startswith("http") or line.startswith("https"): r = httpx.get(line)
-        else: r = httpx.get(url.replace("catalog.txt", line))
-        systems[i] = json.loads(r.text)
-        meta_paths[i] = line
-        i += 1
-    print(f"Fetched {Fore.GREEN}{len(systems)}{Style.RESET_ALL} systems from {Fore.LIGHTBLUE_EX}{url}{Style.RESET_ALL}.")
+    def download(x):
+        return httpx.get(x).text
+    def link(x):
+        if not x.startswith("http") or not x.startswith("https"):
+            return f"{url.rsplit('/', 1)[0]}/{x}"
+        return x
 
-    def print_systems():
-        for j in range(0, PAGE_LEN):
+    try:
+        print("\033[KDownloading catalog...", end="\r")
+        catalog = download(url)
+        print("\033[KParsing catalog...", end="\r")
+        for line in catalog.splitlines():
+            line = link(line)
+            system_queue.put(line)
+        print("\033[KFinished!", end="\r")
+    except httpx.HTTPError:
+        print(f"{Fore.RED}Error{Style.RESET_ALL}: Could not download catalog {url}.")
+        return
+    
+    async def fetch_systems():
+        while not system_queue.empty():
+            system_url = system_queue.get()
             try:
-                print(f"{Fore.BLUE}{j}{Style.RESET_ALL}: {Fore.MAGENTA}{systems[j]['name']}{Style.RESET_ALL} by {Fore.RED}{systems[j]['author']}{Style.RESET_ALL}")
-                lines += 1
-            except KeyError:
-                break
-        print(f"[0-{PAGE_LEN - 1}] View a system, [n]ext page, [r]eprint, [q]uit")
+                response = await asyncio.to_thread(download, system_url)
+                system = json.loads(response)
+                systems.append(system)
+                
+            except httpx.HTTPError:
+                pass
 
-    print_systems()
-    lines += 1
-    answer = click.prompt("", type=str)
+    async def main():
+        fetch_task = asyncio.create_task(fetch_systems())
+        while not system_queue.empty():
+            print(f"\033[KWaiting for systems to download ({len(systems)})...", end="\r")
+            await asyncio.sleep(0.2)
+        await fetch_task
 
-    while answer.lower() != "q":
-        if answer.lower() == "n":
-            if lines - 1 >= len(systems):
-                click.echo("No more systems to display.")
+    asyncio.run(main())
+
+    print(f"\033[KDownloaded {len(systems)} systems.")
+    
+    def print_page(n):
+        start = n * PAGE_LEN
+        end = min(start + PAGE_LEN, len(systems))
+        i = 0
+        for system in systems[start:end]: 
+            print(f"{Fore.RED}{i}{Style.RESET_ALL}: {system['name']}")
+            i += 1
+    def main_prompt(n):
+        start = n * PAGE_LEN
+        end = min(start + PAGE_LEN, len(systems))
+        n_pages = len(systems) // PAGE_LEN
+        print_page(n)
+        print(f"[s{start}-s{end -1}] Select a system to download, [p0-p{n_pages}] Select a page to print, or 'q' to quit.")
+        return click.prompt(">", type=str)
+
+    def print_system(n):
+        print(f"{Fore.RED}System{Style.RESET_ALL}: {systems[n]["name"]}")
+        print(f"{Fore.RED}Description{Style.RESET_ALL}: {systems[n]['description']}")
+        print(f"{Fore.RED}Author{Style.RESET_ALL}: {systems[n]["author"]}")
+        print(f"{Fore.RED}License{Style.RESET_ALL}: {systems[n]["license"]}")
+        print("Download? [y/n]")
+        return click.prompt(">>", type=str)
+
+    input = main_prompt(0)
+    page = 0
+    while input != "q":
+        if input.startswith("s"):
+            system = int(input[1:])
+            if system >= 0 and system < len(systems):
+                input = print_system(system)
+                if input == "y":
+                    template = download(link(systems[system]["path"]))
+                    filename = systems[system]["path"].rsplit('/', 1)[-1]
+                    with open(filename, "w") as f:
+                        f.write(template)
+                    print(f"{Fore.GREEN}System downloaded!{Style.RESET_ALL}")
+                else:
+                    print("Canceled.")
+                main_prompt(page)
             else:
-                print_systems()
-                lines += 1
-        if answer.lower() == "r":
-            for j in range(0, PAGE_LEN):
-                try:
-                    print(f"{Fore.BLUE}{j}{Style.RESET_ALL}: {Fore.MAGENTA}{systems[j]['name']}{Style.RESET_ALL} by {Fore.RED}{systems[j]['author']}{Style.RESET_ALL}")
-                except KeyError:
-                    break
-            print(f"[0-{PAGE_LEN - 1}] View a system, [n]ext page, [r]eprint, [q]uit")
-        if answer.isdigit():
-            try:
-                system = systems[int(answer)]
-
-                print(f"Name: {Fore.MAGENTA}{system['name']}{Style.RESET_ALL}")
-                print(f"Author: {Fore.RED}{system['author']}{Style.RESET_ALL}")
-                print(f"Description: {Fore.GREEN}{system['description']}{Style.RESET_ALL}")
-                print(f"License: {Fore.YELLOW}{system['license']}{Style.RESET_ALL}")
-
-                print(f"Download? [y/n]")
-                download = click.prompt(f"{system['name']}", type=str)
-                if download.lower() == 'y':
-                    r1 = httpx.get(url.replace("catalog.txt", system['path']))
-                    r2 = httpx.get(url.replace("catalog.txt", meta_paths[int(answer)]))
-                    complete = axtools.combine(r2.text, r1.text)
-                    with open(system['path'], "w") as f:
-                        f.write(complete)
-                    print(f"{Fore.GREEN}Downloaded {system['path']}{Style.RESET_ALL}!")
-                    
-                    for j in range(0, PAGE_LEN):
-                        try:
-                            print(f"{Fore.BLUE}{j}{Style.RESET_ALL}: {Fore.MAGENTA}{systems[j]['name']}{Style.RESET_ALL} by {Fore.RED}{systems[j]['author']}{Style.RESET_ALL}")
-                        except KeyError:
-                            break
-                    print(f"[0-{PAGE_LEN - 1}] View a system, [n]ext page, [r]eprint, [q]uit")
-                    
-            except KeyError:
-                print(f"{Fore.RED}Invalid system index{Style.RESET_ALL}")
-        answer = click.prompt("", type=str)
+                print(f"{Fore.RED}Error{Style.RESET_ALL}: Invalid system number.")
+                input = main_prompt(page)
+        elif input.startswith("p"):
+            _page = int(input[1:])
+            if _page >= 0 and _page < len(systems) // PAGE_LEN:
+                page = _page
+                input = main_prompt(page)
+            else:
+                print(f"{Fore.RED}Error{Style.RESET_ALL}: Invalid page number.")
+                input = main_prompt(page)
+        else:
+            print(f"{Fore.RED}Error{Style.RESET_ALL}: Invalid input.")
+            input = main_prompt(page)
