@@ -19,8 +19,8 @@ def load(input_path, output_path, limit, delta, backend):
     "Load a system from a file."
     args = axtools.read(input_path)
     args.backend = name_to_backend[backend]
-    if limit != "-1": args.limit = ax.interpret_time(limit)
     if delta != "-1": args.delta = ax.interpret_time(delta)
+    if limit != "-1": args.limit = ax.round_limit(ax.interpret_time(limit), args.delta)
     if output_path != "":
         if os.path.isdir(output_path): axtools.load(args, f"{output_path}/{args.name}.ax", verbose=True) 
         else: axtools.load(args, output_path, verbose=True)
