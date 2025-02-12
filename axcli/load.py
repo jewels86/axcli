@@ -15,10 +15,10 @@ name_to_backend = {
 @click.option("-l", "--limit", default=-1)
 @click.option("-d", "--delta", default=-1)
 @click.option("-b", "--backend", type=str, default="verlet")
-def load(input_path, output_path, limit, delta):
+def load(input_path, output_path, limit, delta, backend):
     "Load a system from a file."
     args = axtools.read(input_path)
-    args.backend = name_to_backend[args.backend]
+    args.backend = name_to_backend[backend]
     if limit != -1: args.limit = ax.interpret_time(limit)
     if delta != -1: args.delta = ax.interpret_time(delta)
     if output_path != "":
