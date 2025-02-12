@@ -5,6 +5,7 @@ import axinite.tools as axtools
 @click.argument("input_path", type=click.Path(exists=True, file_okay=True, dir_okay=False))
 @click.argument("output_path", type=click.Path(exists=False, file_okay=True, dir_okay=True), default="")
 @click.option("-l", "--limit", default=-1)
+@click.option("-d", "--delta", default=-1)
 def load(input_path, output_path, limit, delta):
     "Load a system from a file."
     args = axtools.read(input_path)
