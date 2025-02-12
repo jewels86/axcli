@@ -12,15 +12,15 @@ name_to_backend = {
 @click.command("load")
 @click.argument("input_path", type=click.Path(exists=True, file_okay=True, dir_okay=False))
 @click.argument("output_path", type=click.Path(exists=False, file_okay=True, dir_okay=True), default="")
-@click.option("-l", "--limit", default=-1)
-@click.option("-d", "--delta", default=-1)
+@click.option("-l", "--limit", default=-"1")
+@click.option("-d", "--delta", default="-1")
 @click.option("-b", "--backend", type=str, default="verlet")
 def load(input_path, output_path, limit, delta, backend):
     "Load a system from a file."
     args = axtools.read(input_path)
     args.backend = name_to_backend[backend]
-    if limit != -1: args.limit = ax.interpret_time(limit)
-    if delta != -1: args.delta = ax.interpret_time(delta)
+    if limit != "-1": args.limit = ax.interpret_time(limit)
+    if delta != "-1": args.delta = ax.interpret_time(delta)
     if output_path != "":
         if os.path.isdir(output_path): axtools.load(args, f"{output_path}/{args.name}.ax", verbose=True) 
         else: axtools.load(args, output_path, verbose=True)

@@ -4,7 +4,7 @@
 - Major increments represent a rework or a revamp of the module.
 - Minor increments represent new functionality or API changes.
 - Patch increments represent bug fixes or other changes that don't directly affect users.
-## 1.2.2-1.2.5 - 2/12/25
+## 1.2.2-1.2.6 - 2/12/25
 - `load` takes a backend
 - Fixed `load` flags
 - Multi-system selection in catalog
