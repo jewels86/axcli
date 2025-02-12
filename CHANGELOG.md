@@ -4,6 +4,8 @@
 - Major increments represent a rework or a revamp of the module.
 - Minor increments represent new functionality or API changes.
 - Patch increments represent bug fixes or other changes that don't directly affect users.
+## 1.2.2 - 2/12/25
+- Multi-system selection in catalog
 ## 1.2.1 - 2/11/25
 - Added flags to `load`
 ## 1.2.0 - 2/7/25

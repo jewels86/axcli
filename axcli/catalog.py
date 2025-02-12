@@ -66,14 +66,14 @@ def catalog(url):
         end = min(start + PAGE_LEN, len(systems))
         n_pages = len(systems) // PAGE_LEN
         print_page(n)
-        print(f"[s{start}-s{end -1}] Select a system to download, [p0-p{n_pages}] Select a page to print, or 'q' to quit.")
+        print(f"[s{start}-s{end -1}] Select systems to download (comma-separated), [p0-p{n_pages}] Select a page to print, or 'q' to quit.")
         return click.prompt(">", type=str)
 
     def print_system(n):
-        print(f"{Fore.RED}System{Style.RESET_ALL}: {systems[n]["name"]}")
+        print(f"{Fore.RED}System{Style.RESET_ALL}: {systems[n]['name']}")
         print(f"{Fore.RED}Description{Style.RESET_ALL}: {systems[n]['description']}")
-        print(f"{Fore.RED}Author{Style.RESET_ALL}: {systems[n]["author"]}")
-        print(f"{Fore.RED}License{Style.RESET_ALL}: {systems[n]["license"]}")
+        print(f"{Fore.RED}Author{Style.RESET_ALL}: {systems[n]['author']}")
+        print(f"{Fore.RED}License{Style.RESET_ALL}: {systems[n]['license']}")
         print("Download? [y/n]")
         return click.prompt(">>", type=str)
 
@@ -81,20 +81,28 @@ def catalog(url):
     page = 0
     while input != "q":
         if input.startswith("s"):
-            system = int(input[1:])
-            if system >= 0 and system < len(systems):
-                input = print_system(system)
-                if input == "y":
-                    template = download(link(systems[system]["path"]))
-                    filename = systems[system]["path"].rsplit('/', 1)[-1]
-                    with open(filename, "w") as f:
-                        f.write(template)
-                    print(f"{Fore.GREEN}System downloaded!{Style.RESET_ALL}")
-                else:
-                    print("Canceled.")
-                main_prompt(page)
+            system_indices = input[1:].replace(" ", "").split(',')
+            valid_indices = []
+            for i in system_indices:
+                if i.isdigit():
+                    valid_indices.append(int(i))
+                elif i.startswith('s') and i[1:].isdigit():
+                    valid_indices.append(int(i[1:]))
+            valid_indices = [i for i in valid_indices if 0 <= i < len(systems)]
+            if valid_indices:
+                for system in valid_indices:
+                    input = print_system(system)
+                    if input == "y":
+                        template = download(link(systems[system]["path"]))
+                        filename = systems[system]["path"].rsplit('/', 1)[-1]
+                        with open(filename, "w") as f:
+                            f.write(template)
+                        print(f"{Fore.GREEN}System {systems[system]['name']} downloaded!{Style.RESET_ALL}")
+                    else:
+                        print("Canceled.")
+                input = main_prompt(page)
             else:
-                print(f"{Fore.RED}Error{Style.RESET_ALL}: Invalid system number.")
+                print(f"{Fore.RED}Error{Style.RESET_ALL}: Invalid system number(s).")
                 input = main_prompt(page)
         elif input.startswith("p"):
             _page = int(input[1:])
