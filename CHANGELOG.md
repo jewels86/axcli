@@ -4,7 +4,7 @@
 - Major increments represent a rework or a revamp of the CLI.
 - Minor increments represent new functionality or interface changes.
 - Patch increments represent bug fixes or other changes that don't directly affect users.
-## 1.2.9 - 2/13/25
+## 1.2.9-1.2.10 - 2/13/25
 - Trying to fix import errors on some systems
 ## 1.2.2-1.2.8 - 2/12/25
 - `load` takes a backend
