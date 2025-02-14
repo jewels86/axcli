@@ -17,6 +17,7 @@ name_to_backend = {
 @click.option("-b", "--backend", type=str, default="verlet")
 def load(input_path, output_path, limit, delta, backend):
     "Load a system from a file."
+    print("Setting up simulation data...")
     args = axtools.read(input_path)
     args.backend = name_to_backend[backend]
     if delta != "-1": args.set_delta(ax.interpret_time(delta))
