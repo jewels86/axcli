@@ -11,3 +11,6 @@ cli.add_command(catalog)
 cli.add_command(run)
 cli.add_command(show)
 cli.add_command(live)
+
+def main():
+    cli()
