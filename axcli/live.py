@@ -8,6 +8,7 @@ def live(path, frontend):
     "Watch a system live."
     name_to_frontend = {
         "vpython": axtools.vpython_frontend,
+        "mpl": axtools.mpl_frontend,
     }
     args = axtools.read(path)
     axtools.live(args, name_to_frontend[frontend](args, "live"))

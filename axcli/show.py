@@ -10,6 +10,8 @@ def show(path, frontend):
     name_to_frontend = {
         "vpython": axtools.vpython_frontend,
         "plotly": axtools.plotly_frontend,
+        "mpl": axtools.mpl_frontend,
+        "mpl-3d": lambda args, type: axtools.mpl_frontend(args, type, "3D"),
     }
     args = axtools.read(path)
     axtools.show(args, name_to_frontend[frontend](args, "show"))

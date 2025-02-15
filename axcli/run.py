@@ -13,7 +13,8 @@ def run(path, backend, frontend):
         "euler": ax.euler_backend,
     }
     name_to_frontend = {
-        "vpython": axtools.vpython_frontend
+        "vpython": axtools.vpython_frontend,
+        "mpl": axtools.mpl_frontend,
     }
     args = axtools.read(path)
     args.backend = name_to_backend[backend]
