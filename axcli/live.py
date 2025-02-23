@@ -6,12 +6,12 @@ import click
 @click.option("-f", "--frontend", type=str, default="vpython")
 @click.option("-s", type=int, default=1)
 @click.option("-r", "--rate", type=int, default=-1)
-def live(path, frontend, s, r):
+def live(path, frontend, s, rate):
     "Watch a system live."
     name_to_frontend = {
         "vpython": axtools.vpython_frontend,
         "mpl": axtools.mpl_frontend,
     }
     args = axtools.read(path)
-    if r != -1: args["rate"] = r
+    if rate != -1: args["rate"] = rate
     axtools.live(args, name_to_frontend[frontend](args, "live", s=s))

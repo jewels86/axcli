@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "axcli"
-version = "1.2.20"
+version = "1.2.21"
 dependencies = ["axinite", "click", "colorama"]
 authors = [{ name = "Jewels", email = "jewels@jewels86.me" }]
 maintainers = [{ name = "Jewels", email = "jewels286@proton.me" }]

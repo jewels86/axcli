@@ -4,7 +4,7 @@
 - Major increments represent a rework or a revamp of the CLI.
 - Minor increments represent new functionality or interface changes.
 - Patch increments represent bug fixes or other changes that don't directly affect users.
-## 1.2.20 (2/23/25)
+## 1.2.20-1.2.21 (2/23/25)
 - Added `-r` flag to `live`
 ## 1.2.19 (2/18/25)
 - Added `-s` flag to `live`
