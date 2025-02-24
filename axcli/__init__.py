@@ -5,3 +5,5 @@ from axcli.run import run
 from axcli.show import show
 from axcli.live import live
 from axcli.cli import cli
+from axcli.menu import menu
+from axcli._list import _list
